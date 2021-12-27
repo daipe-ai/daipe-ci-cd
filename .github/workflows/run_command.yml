@@ -6,12 +6,7 @@ on:
       command:
         required: true
         type: string
-      env:
-        required: true
-        type: string
     secrets:
-      DBX_URL:
-        required: true
       DBX_TOKEN:
         required: true
 
@@ -38,14 +33,9 @@ jobs:
           key: ${{ runner.os }}-venv-${{ hashFiles('**/poetry.lock') }}
 
       - name: setup secrets
-        env:
-          ENV: ${{ inputs.env }}
-          DBX_URL: ${{ secrets.DBX_URL }}
-          DBX_TOKEN: ${{ secrets.DBX_TOKEN }}
         run: |
           cp .env.dist .env
-          sed -i "s,DBX_TOKEN=,DBX_TOKEN=$DBX_TOKEN,g" .env
-          sed -i "s,\[Your workspace address\],$DBX_URL,g" src/$(ls src)/_config/config_$ENV.yaml
+          sed -i "s,DBX_TOKEN=,DBX_TOKEN=${{ secrets.DBX_TOKEN }},g" .env
 
       - name: setup
         run: |
