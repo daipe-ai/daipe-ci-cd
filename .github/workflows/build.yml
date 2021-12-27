@@ -25,9 +25,9 @@ jobs:
           path: |
             .venv
             ~/.poetry/env
-          key: ${{ runner.os }}-env-${{ hashFiles('**/poetry.lock') }}
+          key: ${{ github.repository }}-${{ runner.os }}-env-${{ hashFiles('**/poetry.lock') }}
           restore-keys: |
-            ${{ runner.os }}-env-
+            ${{ github.repository }}-${{ runner.os }}-env-
 
       - name: setup
         run: |
