@@ -2,6 +2,11 @@ name: Reusable build workflow
 
 on:
   workflow_call:
+    inputs:
+      pylint_enabled:
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   build:
@@ -32,6 +37,14 @@ jobs:
           export SHELL=$SHELL # for python to be able to access the bash version
           chmod +x env-init.sh
           ./env-init.sh -y --verbose
+
+      - name: linting
+        if: ${{ inputs.pylint_enabled }}
+        run: |
+          eval "$(conda shell.bash hook)"
+          conda activate $PWD/.venv
+          source ~/.poetry/env
+          poe pylint
 
       - name: decoratorIndentCheck
         run: |
