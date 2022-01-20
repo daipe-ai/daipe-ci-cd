@@ -7,6 +7,10 @@ on:
         type: boolean
         required: false
         default: false
+      check_displays:
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   build:
@@ -46,7 +50,17 @@ jobs:
           source ~/.poetry/env
           poe pylint
 
-      - name: decoratorIndentCheck
+      - name: check displays
+        if: ${{ inputs.check_displays }}
+        run: |
+          if grep -E -i -rnw ",[ ]*display[ ]*=[ ]*True[ ]*)" --include="*.py" src; then
+            echo "When commiting, make sure all @dp.transformation displays are set to False, display=True should be used for debug only."
+            exit 1
+          else
+            echo "All good."
+          fi
+
+      - name: decorator indent check
         run: |
           if grep -E -i -rnw "^[[:space:]]+@(transformation|notebook_function)" --include="*.py" src; then
             echo "It is always a bad idea to indent decorated functions to use them in ifs, for loops, ... You can do better than that!"
@@ -56,7 +70,7 @@ jobs:
           fi
 
 
-      - name: containerChecks
+      - name: container checks
         run: |
           eval "$(conda shell.bash hook)"
           conda activate $PWD/.venv
