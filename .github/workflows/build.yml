@@ -53,7 +53,7 @@ jobs:
       - name: check displays
         if: ${{ inputs.check_displays }}
         run: |
-          if grep -E -i -rnw ",[ ]*display[ ]*=[ ]*True[ ]*)" --include="*.py" src; then
+          if grep -Prz ",[\s]*display[ ]*=[ ]*True[,]?[\s]*[)]" --include="*.py" src; then
             echo "When commiting, make sure all @dp.transformation displays are set to False, display=True should be used for debug only."
             exit 1
           else
@@ -62,7 +62,7 @@ jobs:
 
       - name: decorator indent check
         run: |
-          if grep -E -i -rnw "^[[:space:]]+@(transformation|notebook_function)" --include="*.py" src; then
+          if grep -Prn "^[\s]+@(dp.)?(transformation|notebook_function)" --include="*.py" src; then
             echo "It is always a bad idea to indent decorated functions to use them in ifs, for loops, ... You can do better than that!"
             exit 1
           else
