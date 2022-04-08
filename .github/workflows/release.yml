@@ -5,7 +5,7 @@ on:
 
 jobs:
   release:
-    name: Release package
+    name: Create a release
     runs-on: ubuntu-latest
     if: "startsWith(github.event.head_commit.message, 'bump version to')"
     steps:
