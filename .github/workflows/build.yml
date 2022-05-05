@@ -11,6 +11,10 @@ on:
         type: boolean
         required: false
         default: false
+      run_tests:
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   build:
